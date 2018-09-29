@@ -56,36 +56,57 @@ namespace OrTimer.ViewModel
             ResetButtonCommand = new DelegateCommand(ResetButtonCommandClicked);
         }
 
+        /// <summary>
+        /// 分のプラスボタンを押下したとき
+        /// </summary>
         private void MinutePlusCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// 分のマイナスボタンを押下したとき
+        /// </summary>
         private void MinuteMinusCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// 秒のプラスボタンを押下したとき
+        /// </summary>
         private void SecondPlusCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// 秒のマイナスボタンを押下したとき
+        /// </summary>
         private void SecondMinusCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// スタートボタンを押下したとき
+        /// </summary>
         private void StartButtonCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// ストップボタンを押下したとき
+        /// </summary>
         private void StopButtonCommandClicked()
         {
 
         }
 
+        /// <summary>
+        /// リセットボタンを押下したとき
+        /// </summary>
         private void ResetButtonCommandClicked()
         {
 
