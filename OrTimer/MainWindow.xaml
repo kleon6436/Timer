@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrTimer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="OrTimer" Height="400" Width="320">
     <Grid>
         
     </Grid>
