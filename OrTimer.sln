@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrTimer", "OrTimer\OrTimer.csproj", "{AEA19F9B-C135-4E4E-92E7-0AF593AB12F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEA19F9B-C135-4E4E-92E7-0AF593AB12F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEA19F9B-C135-4E4E-92E7-0AF593AB12F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEA19F9B-C135-4E4E-92E7-0AF593AB12F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEA19F9B-C135-4E4E-92E7-0AF593AB12F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {216E8DCC-351B-40A9-AD03-395F05CE4D7B}
+	EndGlobalSection
+EndGlobal
