@@ -121,7 +121,7 @@ namespace OrTimer.Model
         public void StartTimer()
         {
             // 設定されたタイマーの値が分、秒どちらも0以下の場合は何もしない
-            if (TimerMinuteAndSecond.Minute < MIN_TIMER_VALUE && TimerMinuteAndSecond.Second < MIN_TIMER_VALUE)
+            if (TimerMinuteAndSecond.Minute <= MIN_TIMER_VALUE && TimerMinuteAndSecond.Second <= MIN_TIMER_VALUE)
             {
                 return;
             }
@@ -157,7 +157,7 @@ namespace OrTimer.Model
                 TimerMinuteAndSecond.Second -= 1;
             }
 
-            // UIに反映
+            // UIに反映(別スレッドなので、Dispatcherを利用)
             var dispatcher = App.Current.Dispatcher;
             dispatcher.BeginInvoke(new Action(() =>
             {

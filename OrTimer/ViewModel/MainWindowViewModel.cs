@@ -118,6 +118,10 @@ namespace OrTimer.ViewModel
             TimerController.ResetTimer();
         }
 
+        /// <summary>
+        /// タイマー値を更新する
+        /// </summary>
+        /// <param name="_timerValue">タイマー値</param>
         private void UpdateTimerValue(TimerControl.TimerValue _timerValue)
         {
             MinuteText = TimerController.GetStringValueFromTimerValue(_timerValue.Minute);
