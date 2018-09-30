@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows.Input;
+using OrTimer.Model;
 
 namespace OrTimer.ViewModel
 {
@@ -30,11 +31,16 @@ namespace OrTimer.ViewModel
             set { SetProperty(ref _secondText, value); }
         }
 
+        public TimerControl TimerController;
+
         // コンストラクタ
         public MainWindowViewModel()
         {
             // コマンドの設定
             SetCommand();
+
+            TimerController = new TimerControl();
+            TimerController.TimerEvent += UpdateTimerValue;
 
             // プロパティの初期値をセット
             const string _defaultValue = "00";  // ２桁表示であることに注意
@@ -61,7 +67,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void MinutePlusCommandClicked()
         {
-
+            MinuteText = TimerController.PlusMinute();
         }
 
         /// <summary>
@@ -69,7 +75,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void MinuteMinusCommandClicked()
         {
-
+            MinuteText = TimerController.MinusMinute();
         }
 
         /// <summary>
@@ -77,7 +83,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void SecondPlusCommandClicked()
         {
-
+            SecondText = TimerController.PlusSecond();
         }
 
         /// <summary>
@@ -85,7 +91,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void SecondMinusCommandClicked()
         {
-
+            SecondText = TimerController.MinusSecond();
         }
 
         /// <summary>
@@ -93,7 +99,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void StartButtonCommandClicked()
         {
-
+            TimerController.StartTimer();
         }
 
         /// <summary>
@@ -101,7 +107,7 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void StopButtonCommandClicked()
         {
-
+            TimerController.StopTimer();
         }
 
         /// <summary>
@@ -109,7 +115,13 @@ namespace OrTimer.ViewModel
         /// </summary>
         private void ResetButtonCommandClicked()
         {
+            TimerController.ResetTimer();
+        }
 
+        private void UpdateTimerValue(TimerControl.TimerValue _timerValue)
+        {
+            MinuteText = TimerController.GetStringValueFromTimerValue(_timerValue.Minute);
+            SecondText = TimerController.GetStringValueFromTimerValue(_timerValue.Second);
         }
     }
 }
