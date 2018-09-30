@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("OrTimer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Kleon Original Timer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Kleon")]
 [assembly: AssemblyProduct("OrTimer")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]

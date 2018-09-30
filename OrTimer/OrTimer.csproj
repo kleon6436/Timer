@@ -50,6 +50,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Image\OrTimerIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Prism, Version=7.0.0.396, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.0.0.396\lib\net45\Prism.dll</HintPath>
