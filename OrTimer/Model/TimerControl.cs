@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using System.Windows;
 
 namespace OrTimer.Model
 {
@@ -167,9 +168,15 @@ namespace OrTimer.Model
             // どちらも0になった場合はタイマー終了
             if (TimerMinuteAndSecond.Minute == MIN_TIMER_VALUE && TimerMinuteAndSecond.Second == MIN_TIMER_VALUE)
             {
+                // タイマーを終了
                 TimerCount.Stop();
                 TimerCount.Dispose();
                 TimerCount = null;
+
+                // Todo:通知方法は要検討(仮実装：MessageBox)
+                string _message = "時間になりました！";
+                MessageBox.Show(_message, "タイマー時間経過", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 return;
             }
         }
