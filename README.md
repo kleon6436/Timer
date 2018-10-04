@@ -16,4 +16,5 @@ OrTimer@KLeon はKLeonオリジナルのタイマーアプリです。
 
 ## クレジット
 - KLeon @kleon64 (Author, Developer)
+
 This software is released under the MIT License, see LICENSE.txt.
