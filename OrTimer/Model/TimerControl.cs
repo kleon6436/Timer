@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
 
@@ -6,6 +7,12 @@ namespace OrTimer.Model
 {
     public class TimerControl
     {
+        // 音程を表す周波数と長さ
+        private readonly int cfreq = 262; // ド
+        private readonly int efreq = 330; // ミ
+        private readonly int gfreq = 392; // ソ
+        private readonly int duration = 500;
+
         // Timerイベント
         public delegate void TimerEventHandler(TimerValue _timerValue);
         public event TimerEventHandler TimerEvent;
@@ -173,9 +180,8 @@ namespace OrTimer.Model
                 TimerCount.Dispose();
                 TimerCount = null;
 
-                // Todo:通知方法は要検討(仮実装：MessageBox)
-                string _message = "時間になりました！";
-                MessageBox.Show(_message, "タイマー時間経過", MessageBoxButton.OK, MessageBoxImage.Information);
+                // ドミソミドと音を鳴らす
+                BeepSound();
 
                 return;
             }
@@ -217,6 +223,22 @@ namespace OrTimer.Model
             // UIに反映
             TimerEvent(TimerMinuteAndSecond);
         }
+
+        /// <summary>
+        /// ドミソミドと音を鳴らす
+        /// </summary>
+        private void BeepSound()
+        {
+            Beep(cfreq, duration); // ド
+            Beep(efreq, duration); // ミ
+            Beep(gfreq, duration); // ソ
+            Beep(efreq, duration); // ミ
+            Beep(cfreq, duration); // ド
+        }
+
+        // Beep音の作成(DLLの読み込み)
+        [DllImport("Kernel32.dll")]
+        public static extern bool Beep(int _dwFreq, int _dwDuration);
     }
 
 }
