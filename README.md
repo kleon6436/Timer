@@ -3,6 +3,8 @@
 
 OrTimer@KLeon はKLeonオリジナルのタイマーアプリです。
 
+![AppScreenShot](https://github.com/Knleon/OrTimer/tree/master/OrTimer/doc_image/app_screenshot.jpg)
+
 ## アプリの動作
 1分または1秒単位で、59分59秒までタイマーをセットすることができます。現在は暫定でタイマー終了時にポップアップを表示するようになっています。今後、よりよいものに修正する予定です。
 
