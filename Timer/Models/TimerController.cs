@@ -151,7 +151,10 @@ namespace Kchary.Timer.Models
         /// </summary>
         public void StopTimer()
         {
-            if (_timerCount == null) return;
+            if (_timerCount == null)
+            {
+                return;
+            }
 
             _timerCount.Stop();
             _timerCount.Dispose();
@@ -193,7 +196,6 @@ namespace Kchary.Timer.Models
 
         internal class NativeMethods
         {
-            // Beep音の作成(DLLの読み込み)
             [DllImport("Kernel32.dll")]
             internal static extern bool Beep(int dwFreq, int dwDuration);
         }
