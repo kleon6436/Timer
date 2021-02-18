@@ -1,9 +1,9 @@
 ﻿using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows.Input;
-using OrTimer.Model;
+using Kchary.Timer.Model;
 
-namespace OrTimer.ViewModel
+namespace Kchary.Timer.ViewModel
 {
     public class MainWindowViewModel:BindableBase
     {
@@ -31,7 +31,7 @@ namespace OrTimer.ViewModel
             set { SetProperty(ref _secondText, value); }
         }
 
-        public TimerControl TimerController;
+        public TimerController TimerController;
 
         // コンストラクタ
         public MainWindowViewModel()
@@ -39,7 +39,7 @@ namespace OrTimer.ViewModel
             // コマンドの設定
             SetCommand();
 
-            TimerController = new TimerControl();
+            TimerController = new TimerController();
             TimerController.TimerEvent += UpdateTimerValue;
 
             // プロパティの初期値をセット
@@ -122,7 +122,7 @@ namespace OrTimer.ViewModel
         /// タイマー値を更新する
         /// </summary>
         /// <param name="_timerValue">タイマー値</param>
-        private void UpdateTimerValue(TimerControl.TimerValue _timerValue)
+        private void UpdateTimerValue(TimerController.TimerValue _timerValue)
         {
             MinuteText = TimerController.GetStringValueFromTimerValue(_timerValue.Minute);
             SecondText = TimerController.GetStringValueFromTimerValue(_timerValue.Second);

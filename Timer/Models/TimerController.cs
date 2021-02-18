@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Timers;
-using System.Windows;
 
-namespace OrTimer.Model
+namespace Kchary.Timer.Model
 {
-    public class TimerControl
+    public class TimerController
     {
         // 音程を表す周波数と長さ
         private readonly int cfreq = 262; // ド
@@ -36,7 +35,7 @@ namespace OrTimer.Model
         public TimerValue TimerMinuteAndSecond;
 
         // コンストラクタ
-        public TimerControl()
+        public TimerController()
         {
             // デフォルトの値をセット
             const int _defaultMinuteTimer = 0;
@@ -122,7 +121,7 @@ namespace OrTimer.Model
             return _timerStringValue;
         }
 
-        private Timer TimerCount;
+        private System.Timers.Timer TimerCount;
         /// <summary>
         /// タイマーをスタート
         /// </summary>
@@ -139,7 +138,7 @@ namespace OrTimer.Model
                 return;
             }
 
-            TimerCount = new Timer(1000); // 1秒ごとの処理にセット
+            TimerCount = new System.Timers.Timer(1000); // 1秒ごとの処理にセット
 
             // タイマーでの処理をイベントハンドラーとして登録
             TimerCount.Elapsed += new ElapsedEventHandler(OnElapsed_TimersTimer);
