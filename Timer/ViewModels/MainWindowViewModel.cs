@@ -1,58 +1,37 @@
-﻿using Prism.Mvvm;
+﻿using System.Windows.Input;
+using Kchary.Timer.Models;
 using Prism.Commands;
-using System.Windows.Input;
-using Kchary.Timer.Model;
+using Prism.Mvvm;
 
-namespace Kchary.Timer.ViewModel
+namespace Kchary.Timer.ViewModels
 {
-    public class MainWindowViewModel:BindableBase
+    public class MainWindowViewModel : BindableBase
     {
-        // コマンド一覧
-        public ICommand MinutePlusCommand { get; set; }
-        public ICommand MinuteMinusCommand { get; set; }
-        public ICommand SecondPlusCommand { get; set; }
-        public ICommand SecondMinusCommand { get; set; }
-        public ICommand StartButtonCommand { get; set; }
-        public ICommand StopButtonCommand { get; set; }
-        public ICommand ResetButtonCommand { get; set; }
+        #region コマンド一覧
 
-        // 値のプロパティ一覧
-        private string _minuteText;
-        public string MinuteText
-        {
-            get { return _minuteText; }
-            set { SetProperty(ref _minuteText, value); }
-        }
+        public ICommand MinutePlusCommand { get; }
+        public ICommand MinuteMinusCommand { get; }
+        public ICommand SecondPlusCommand { get; }
+        public ICommand SecondMinusCommand { get; }
+        public ICommand StartButtonCommand { get; }
+        public ICommand StopButtonCommand { get; }
+        public ICommand ResetButtonCommand { get; }
 
-        private string _secondText;
-        public string SecondText
-        {
-            get { return _secondText; }
-            set { SetProperty(ref _secondText, value); }
-        }
+        #endregion
+
+        /// <summary>
+        /// タイマーに表示する数字のデフォルト値
+        /// </summary>
+        private const string DefaultValue = "00"; // ２桁表示であることに注意
 
         public TimerController TimerController;
 
-        // コンストラクタ
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public MainWindowViewModel()
         {
             // コマンドの設定
-            SetCommand();
-
-            TimerController = new TimerController();
-            TimerController.TimerEvent += UpdateTimerValue;
-
-            // プロパティの初期値をセット
-            const string _defaultValue = "00";  // ２桁表示であることに注意
-            MinuteText = _defaultValue;
-            SecondText = _defaultValue;
-        }
-
-        /// <summary>
-        /// コマンドの設定
-        /// </summary>
-        private void SetCommand()
-        {
             MinutePlusCommand = new DelegateCommand(MinutePlusCommandClicked);
             MinuteMinusCommand = new DelegateCommand(MinuteMinusCommandClicked);
             SecondPlusCommand = new DelegateCommand(SecondPlusCommandClicked);
@@ -60,6 +39,27 @@ namespace Kchary.Timer.ViewModel
             StartButtonCommand = new DelegateCommand(StartButtonCommandClicked);
             StopButtonCommand = new DelegateCommand(StopButtonCommandClicked);
             ResetButtonCommand = new DelegateCommand(ResetButtonCommandClicked);
+
+            TimerController = new TimerController();
+            TimerController.TimerEvent += UpdateTimerValue;
+
+            // プロパティの初期値をセット
+            MinuteText = DefaultValue;
+            SecondText = DefaultValue;
+        }
+
+        private string _minuteText;
+        public string MinuteText
+        {
+            get => _minuteText;
+            set => SetProperty(ref _minuteText, value);
+        }
+
+        private string _secondText;
+        public string SecondText
+        {
+            get => _secondText;
+            set => SetProperty(ref _secondText, value);
         }
 
         /// <summary>
@@ -121,11 +121,11 @@ namespace Kchary.Timer.ViewModel
         /// <summary>
         /// タイマー値を更新する
         /// </summary>
-        /// <param name="_timerValue">タイマー値</param>
-        private void UpdateTimerValue(TimerController.TimerValue _timerValue)
+        /// <param name="timerValue">タイマー値</param>
+        private void UpdateTimerValue(TimerValue timerValue)
         {
-            MinuteText = TimerController.GetStringValueFromTimerValue(_timerValue.Minute);
-            SecondText = TimerController.GetStringValueFromTimerValue(_timerValue.Second);
+            MinuteText = TimerController.GetStringValueFromTimerValue(timerValue.Minute);
+            SecondText = TimerController.GetStringValueFromTimerValue(timerValue.Second);
         }
     }
 }

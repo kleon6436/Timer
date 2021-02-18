@@ -1,4 +1,4 @@
-﻿using Kchary.Timer.ViewModel;
+﻿using Kchary.Timer.ViewModels;
 
 namespace Kchary.Timer
 {
