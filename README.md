@@ -7,7 +7,7 @@
 シンプルな機能のものが使いたい！
 上記のようなことを思ったので、作ってみました。
 
-![Startup project](./OrTimer/doc_image/app_screenshot.jpg)
+![Startup project](./doc_image/app_screenshot.jpg)
 
 ## アプリケーションの動作：
 
