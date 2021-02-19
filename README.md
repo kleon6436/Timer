@@ -1,11 +1,10 @@
 ﻿# Timer
 
-「KLeonオリジナルのタイマーアプリ」です。
+タイマーアプリです。以下のようなことを思い、自作してみました。
 
-パソコン操作しながら、ラーメン作りたい！
-パソコンで気軽にタイマーが触りたい！
-シンプルな機能のものが使いたい！
-上記のようなことを思ったので、作ってみました。
+- パソコン操作しながら、ラーメン作りたい！
+- パソコンで気軽にタイマーが触りたい！
+- シンプルな機能のものが使いたい！
 
 ![Startup project](./doc_image/app_screenshot.jpg)
 
@@ -37,7 +36,7 @@
 
 
 ## クレジット
-
 - KLeon @kleon64 (Author, Developer)
+
 
 This software is released under the MIT License, see LICENSE.txt.
