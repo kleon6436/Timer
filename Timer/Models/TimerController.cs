@@ -25,7 +25,7 @@ namespace Kchary.Timer.Models
         private System.Timers.Timer _timerCount;
 
 
-        public TimerValue TimerValue;
+        private readonly TimerValue _timerValue;
 
         /// <summary>
         /// コンストラクタ
@@ -35,7 +35,7 @@ namespace Kchary.Timer.Models
             // デフォルトの値をセット
             const int defaultMinuteTimer = 0;
             const int defaultSecondTimer = 0;
-            TimerValue = new TimerValue(defaultMinuteTimer, defaultSecondTimer);
+            _timerValue = new TimerValue(defaultMinuteTimer, defaultSecondTimer);
         }
 
         public event TimerEventHandler TimerEvent;
@@ -46,9 +46,9 @@ namespace Kchary.Timer.Models
         public string PlusMinute()
         {
             // タイマー値の最大値より小さい場合は＋１
-            if (TimerValue.Minute < MaxTimerValue) TimerValue.Minute += 1;
+            if (_timerValue.Minute < MaxTimerValue) _timerValue.Minute += 1;
 
-            return GetStringValueFromTimerValue(TimerValue.Minute);
+            return GetStringValueFromTimerValue(_timerValue.Minute);
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Kchary.Timer.Models
         public string MinusMinute()
         {
             // タイマー値の最小値より大きい場合は-１
-            if (TimerValue.Minute > MinTimerValue) TimerValue.Minute -= 1;
+            if (_timerValue.Minute > MinTimerValue) _timerValue.Minute -= 1;
 
-            return GetStringValueFromTimerValue(TimerValue.Minute);
+            return GetStringValueFromTimerValue(_timerValue.Minute);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Kchary.Timer.Models
         public string PlusSecond()
         {
             // タイマー値の最大値より小さい場合は＋１
-            if (TimerValue.Second < MaxTimerValue) TimerValue.Second += 1;
+            if (_timerValue.Second < MaxTimerValue) _timerValue.Second += 1;
 
-            return GetStringValueFromTimerValue(TimerValue.Second);
+            return GetStringValueFromTimerValue(_timerValue.Second);
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Kchary.Timer.Models
         public string MinusSecond()
         {
             // タイマー値の最小値より大きい場合は-１
-            if (TimerValue.Second > MinTimerValue) TimerValue.Second -= 1;
+            if (_timerValue.Second > MinTimerValue) _timerValue.Second -= 1;
 
-            return GetStringValueFromTimerValue(TimerValue.Second);
+            return GetStringValueFromTimerValue(_timerValue.Second);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Kchary.Timer.Models
         public void StartTimer()
         {
             // 設定されたタイマーの値が分、秒どちらも0以下の場合は何もしない
-            if (TimerValue.Minute <= MinTimerValue && TimerValue.Second <= MinTimerValue) return;
+            if (_timerValue.Minute <= MinTimerValue && _timerValue.Second <= MinTimerValue) return;
 
             if (_timerCount != null) return;
 
@@ -119,23 +119,23 @@ namespace Kchary.Timer.Models
         /// </summary>
         private void OnElapsed_TimersTimer(object sender, ElapsedEventArgs e)
         {
-            if (TimerValue.Minute > MinTimerValue && TimerValue.Second == MinTimerValue)
+            if (_timerValue.Minute > MinTimerValue && _timerValue.Second == MinTimerValue)
             {
                 // 1分減らして59秒にする
-                TimerValue.Minute -= 1;
-                TimerValue.Second = MaxTimerValue;
+                _timerValue.Minute -= 1;
+                _timerValue.Second = MaxTimerValue;
             }
             else
             {
                 // 1秒減らす
-                TimerValue.Second -= 1;
+                _timerValue.Second -= 1;
             }
 
             // UIに反映(別スレッドなので、Dispatcherを利用)
-            Application.Current.Dispatcher.Invoke(() => { TimerEvent?.Invoke(TimerValue); });
+            Application.Current.Dispatcher.Invoke(() => { TimerEvent?.Invoke(_timerValue); });
 
             // どちらも0になった場合はタイマー終了
-            if (TimerValue.Minute != MinTimerValue || TimerValue.Second != MinTimerValue) return;
+            if (_timerValue.Minute != MinTimerValue || _timerValue.Second != MinTimerValue) return;
 
             // タイマーを終了
             _timerCount.Stop();
@@ -176,10 +176,10 @@ namespace Kchary.Timer.Models
             }
 
             // タイマーを最小値に戻す
-            TimerValue.Minute = MinTimerValue;
-            TimerValue.Second = MinTimerValue;
+            _timerValue.Minute = MinTimerValue;
+            _timerValue.Second = MinTimerValue;
 
-            TimerEvent?.Invoke(TimerValue);
+            TimerEvent?.Invoke(_timerValue);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Kchary.Timer.Models
             NativeMethods.Beep(Cfreq, Duration); // ド
         }
 
-        internal class NativeMethods
+        private class NativeMethods
         {
             [DllImport("Kernel32.dll")]
             internal static extern bool Beep(int dwFreq, int dwDuration);

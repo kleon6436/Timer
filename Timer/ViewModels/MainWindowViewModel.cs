@@ -24,7 +24,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private const string DefaultValue = "00"; // ２桁表示であることに注意
 
-        public TimerController TimerController;
+        private readonly TimerController _timerController;
 
         /// <summary>
         /// コンストラクタ
@@ -40,8 +40,8 @@ namespace Kchary.Timer.ViewModels
             StopButtonCommand = new DelegateCommand(StopButtonCommandClicked);
             ResetButtonCommand = new DelegateCommand(ResetButtonCommandClicked);
 
-            TimerController = new TimerController();
-            TimerController.TimerEvent += UpdateTimerValue;
+            _timerController = new TimerController();
+            _timerController.TimerEvent += UpdateTimerValue;
 
             // プロパティの初期値をセット
             MinuteText = DefaultValue;
@@ -52,14 +52,14 @@ namespace Kchary.Timer.ViewModels
         public string MinuteText
         {
             get => _minuteText;
-            set => SetProperty(ref _minuteText, value);
+            private set => SetProperty(ref _minuteText, value);
         }
 
         private string _secondText;
         public string SecondText
         {
             get => _secondText;
-            set => SetProperty(ref _secondText, value);
+            private set => SetProperty(ref _secondText, value);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void MinutePlusCommandClicked()
         {
-            MinuteText = TimerController.PlusMinute();
+            MinuteText = _timerController.PlusMinute();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void MinuteMinusCommandClicked()
         {
-            MinuteText = TimerController.MinusMinute();
+            MinuteText = _timerController.MinusMinute();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void SecondPlusCommandClicked()
         {
-            SecondText = TimerController.PlusSecond();
+            SecondText = _timerController.PlusSecond();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void SecondMinusCommandClicked()
         {
-            SecondText = TimerController.MinusSecond();
+            SecondText = _timerController.MinusSecond();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void StartButtonCommandClicked()
         {
-            TimerController.StartTimer();
+            _timerController.StartTimer();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void StopButtonCommandClicked()
         {
-            TimerController.StopTimer();
+            _timerController.StopTimer();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void ResetButtonCommandClicked()
         {
-            TimerController.ResetTimer();
+            _timerController.ResetTimer();
         }
 
         /// <summary>

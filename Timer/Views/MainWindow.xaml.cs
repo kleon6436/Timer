@@ -1,6 +1,6 @@
 ﻿using Kchary.Timer.ViewModels;
 
-namespace Kchary.Timer
+namespace Kchary.Timer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
