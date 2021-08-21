@@ -24,11 +24,11 @@
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding MinuteText}" FontSize="80" VerticalAlignment="Center"
+                <TextBlock Grid.Column="0" Text="{Binding MinuteText, Mode=OneWay}" FontSize="80" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
                 <TextBlock Grid.Column="1" Text="：" FontSize="80" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="{Binding SecondText}" FontSize="80" VerticalAlignment="Center"
+                <TextBlock Grid.Column="2" Text="{Binding SecondText, Mode=OneWay}" FontSize="80" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
             </Grid>
         </Border>
@@ -40,25 +40,25 @@
             <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Content="▲" Command="{Binding MinutePlusCommand}" FontSize="24" Width="35" Height="35"
                         Margin="5" />
-                <TextBlock Text="分" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" />
+                <TextBlock Text="Minute" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" />
                 <Button Content="▼" Command="{Binding MinuteMinusCommand}" FontSize="24" Width="35" Height="35"
                         Margin="5" />
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Content="▲" Command="{Binding SecondPlusCommand}" FontSize="24" Width="35" Height="35"
                         Margin="5" />
-                <TextBlock Text="秒" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" />
+                <TextBlock Text="Second" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" />
                 <Button Content="▼" Command="{Binding SecondMinusCommand}" FontSize="24" Width="35" Height="35"
                         Margin="5" />
             </StackPanel>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"
                     Height="40">
-            <Button Content="スタート" Command="{Binding StartButtonCommand}" FontSize="20" Width="80" Margin="5"
+            <Button Content="Start" Command="{Binding StartButtonCommand}" FontSize="20" Width="80" Margin="5"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-            <Button Content="ストップ" Command="{Binding StopButtonCommand}" FontSize="20" Width="80" Margin="5"
+            <Button Content="Stop" Command="{Binding StopButtonCommand}" FontSize="20" Width="80" Margin="5"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-            <Button Content="リセット" Command="{Binding ResetButtonCommand}" FontSize="20" Width="80" Margin="5"
+            <Button Content="Reset" Command="{Binding ResetButtonCommand}" FontSize="20" Width="80" Margin="5"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
         </StackPanel>
     </Grid>
