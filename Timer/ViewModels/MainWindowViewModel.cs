@@ -28,8 +28,8 @@ namespace Kchary.Timer.ViewModels
         private const string DefaultValue = "00";
         private TimerController TimerController { get; init; }
 
-        private string _minuteText;
-        private string _secondText;
+        private string minuteText;
+        private string secondText;
 
         /// <summary>
         /// コンストラクタ
@@ -55,14 +55,14 @@ namespace Kchary.Timer.ViewModels
 
         public string MinuteText
         {
-            get => _minuteText;
-            private set => SetProperty(ref _minuteText, value);
+            get => minuteText;
+            private set => SetProperty(ref minuteText, value);
         }
 
         public string SecondText
         {
-            get => _secondText;
-            private set => SetProperty(ref _secondText, value);
+            get => secondText;
+            private set => SetProperty(ref secondText, value);
         }
 
         /// <summary>
