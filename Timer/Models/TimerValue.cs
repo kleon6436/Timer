@@ -3,7 +3,7 @@
     /// <summary>
     /// タイマー値の管理クラス
     /// </summary>
-    public sealed class TimerValue
+    public sealed record TimerValue
     {
         public TimerValue(int minute, int second)
         {
