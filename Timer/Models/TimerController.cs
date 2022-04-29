@@ -7,6 +7,13 @@ namespace Kchary.Timer.Models
     public sealed class TimerController
     {
         /// <summary>
+        /// Timerイベント
+        /// </summary>
+        /// <param name="timerValue">Timer value</param>
+        public delegate void TimerEventHandler(TimerValue timerValue);
+        public event TimerEventHandler TimerEvent;
+
+        /// <summary>
         /// 音程を表す周波数と長さ、タイマーの最大・最小値の固定値
         /// </summary>
         private const int CFreq = 262; // ド
@@ -16,25 +23,32 @@ namespace Kchary.Timer.Models
         private const int MaxTimerValue = 59;
         private const int MinTimerValue = 0;
 
-        private System.Timers.Timer timerCount;
-        private readonly TimerValue timerValue;
+        /// <summary>
+        /// タイマー値
+        /// </summary>
+        private TimerValue TimerValue { get; }
 
         /// <summary>
-        /// Timerイベント
+        /// タイマー
         /// </summary>
-        /// <param name="timerValue">Timer value</param>
-        public delegate void TimerEventHandler(TimerValue timerValue);
-        public event TimerEventHandler TimerEvent;
+        private System.Timers.Timer Timer { get; }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public TimerController()
         {
-            // デフォルトの値をセット
+            // デフォルト値設定
             const int DefaultMinuteTimer = 0;
             const int DefaultSecondTimer = 0;
-            timerValue = new TimerValue(DefaultMinuteTimer, DefaultSecondTimer);
+            TimerValue = new TimerValue(DefaultMinuteTimer, DefaultSecondTimer);
+
+            // タイマーの初期化とイベントハンドラー登録
+            Timer = new System.Timers.Timer(1000)
+            {
+                Enabled = false
+            };
+            Timer.Elapsed += OnElapsedTimer;
         }
 
         /// <summary>
@@ -43,12 +57,12 @@ namespace Kchary.Timer.Models
         public string PlusMinute()
         {
             // タイマー値の最大値より小さい場合は＋１
-            if (timerValue.Minute < MaxTimerValue)
+            if (TimerValue.Minute > MaxTimerValue)
             {
-                timerValue.Minute += 1;
+                TimerValue.Minute += 1;
             }
 
-            return GetStringValueFromTimerValue(timerValue.Minute);
+            return GetTimerValue(TimerValue.Minute);
         }
 
         /// <summary>
@@ -57,12 +71,12 @@ namespace Kchary.Timer.Models
         public string MinusMinute()
         {
             // タイマー値の最小値より大きい場合は-１
-            if (timerValue.Minute > MinTimerValue)
+            if (TimerValue.Minute > MinTimerValue)
             {
-                timerValue.Minute -= 1;
+                TimerValue.Minute -= 1;
             }
 
-            return GetStringValueFromTimerValue(timerValue.Minute);
+            return GetTimerValue(TimerValue.Minute);
         }
 
         /// <summary>
@@ -71,12 +85,12 @@ namespace Kchary.Timer.Models
         public string PlusSecond()
         {
             // タイマー値の最大値より小さい場合は＋１
-            if (timerValue.Second < MaxTimerValue)
+            if (TimerValue.Second < MaxTimerValue)
             {
-                timerValue.Second += 1;
+                TimerValue.Second += 1;
             }
 
-            return GetStringValueFromTimerValue(timerValue.Second);
+            return GetTimerValue(TimerValue.Second);
         }
 
         /// <summary>
@@ -85,20 +99,20 @@ namespace Kchary.Timer.Models
         public string MinusSecond()
         {
             // タイマー値の最小値より大きい場合は-１
-            if (timerValue.Second > MinTimerValue)
+            if (TimerValue.Second > MinTimerValue)
             {
-                timerValue.Second -= 1;
+                TimerValue.Second -= 1;
             }
 
-            return GetStringValueFromTimerValue(timerValue.Second);
+            return GetTimerValue(TimerValue.Second);
         }
 
         /// <summary>
-        /// タイマー値を文字列に変換する
+        /// タイマー値を取得する
         /// </summary>
         /// <param name="timerValue">タイマー値</param>
         /// <returns>タイマー値を文字列に変換した結果</returns>
-        public static string GetStringValueFromTimerValue(int timerValue)
+        public static string GetTimerValue(int timerValue)
         {
             // タイマーの値が10以下の場合は2桁目に0をつける
             return timerValue < 10 ? $"0{timerValue}" : timerValue.ToString();
@@ -110,52 +124,13 @@ namespace Kchary.Timer.Models
         public void StartTimer()
         {
             // 設定されたタイマーの値が分、秒どちらも0以下の場合は何もしない
-            if (timerValue.Minute <= MinTimerValue && timerValue.Second <= MinTimerValue) return;
-
-            if (timerCount != null) return;
-
-            timerCount = new System.Timers.Timer(1000); // 1秒ごとの処理にセット
-
-            // タイマーでの処理をイベントハンドラーとして登録
-            timerCount.Elapsed += OnElapsed_TimersTimer;
-
-            // タイマーを開始
-            timerCount.Start();
-        }
-
-        /// <summary>
-        /// タイマー動作中の動作
-        /// </summary>
-        private void OnElapsed_TimersTimer(object sender, ElapsedEventArgs e)
-        {
-            if (timerValue.Minute > MinTimerValue && timerValue.Second == MinTimerValue)
-            {
-                // 1分減らして59秒にする
-                timerValue.Minute -= 1;
-                timerValue.Second = MaxTimerValue;
-            }
-            else
-            {
-                // 1秒減らす
-                timerValue.Second -= 1;
-            }
-
-            // UIに反映(別スレッドなので、Dispatcherを利用)
-            Application.Current.Dispatcher.Invoke(() => { TimerEvent?.Invoke(timerValue); });
-
-            // どちらも0になった場合はタイマー終了
-            if (timerValue.Minute != MinTimerValue || timerValue.Second != MinTimerValue)
+            if (TimerValue.Minute <= MinTimerValue && TimerValue.Second <= MinTimerValue)
             {
                 return;
             }
 
-            // タイマーを終了
-            timerCount.Stop();
-            timerCount.Dispose();
-            timerCount = null;
-
-            // ドミソミドと音を鳴らす
-            BeepSound();
+            // タイマーを開始
+            Timer.Start();
         }
 
         /// <summary>
@@ -163,14 +138,7 @@ namespace Kchary.Timer.Models
         /// </summary>
         public void StopTimer()
         {
-            if (timerCount == null)
-            {
-                return;
-            }
-
-            timerCount.Stop();
-            timerCount.Dispose();
-            timerCount = null;
+            Timer.Stop();
         }
 
         /// <summary>
@@ -178,20 +146,17 @@ namespace Kchary.Timer.Models
         /// </summary>
         public void ResetTimer()
         {
-            // タイマーが動作中の場合
-            if (timerCount != null)
+            // 動作中のタイマーをリセット
+            if (Timer.Enabled)
             {
-                // タイマーを停止
-                timerCount.Stop();
-                timerCount.Dispose();
-                timerCount = null;
+                Timer.Stop();
             }
 
             // タイマーを最小値に戻す
-            timerValue.Minute = MinTimerValue;
-            timerValue.Second = MinTimerValue;
+            TimerValue.Minute = MinTimerValue;
+            TimerValue.Second = MinTimerValue;
 
-            TimerEvent?.Invoke(timerValue);
+            TimerEvent?.Invoke(TimerValue);
         }
 
         /// <summary>
@@ -206,6 +171,39 @@ namespace Kchary.Timer.Models
             NativeMethods.Beep(CFreq, Duration); // ド
         }
 
+        /// <summary>
+        /// タイマー動作中の動作
+        /// </summary>
+        private void OnElapsedTimer(object sender, ElapsedEventArgs e)
+        {
+            if (TimerValue.Minute > MinTimerValue && TimerValue.Second == MinTimerValue)
+            {
+                // 1分減らして59秒にする
+                TimerValue.Minute -= 1;
+                TimerValue.Second = MaxTimerValue;
+            }
+            else
+            {
+                // 1秒減らす
+                TimerValue.Second -= 1;
+            }
+
+            Application.Current.Dispatcher.Invoke(() => { TimerEvent?.Invoke(TimerValue); });
+
+            // どちらも0になった場合はタイマー終了
+            if (TimerValue.Minute == MinTimerValue && TimerValue.Second == MinTimerValue)
+            {
+                // タイマーを終了
+                Timer.Stop();
+
+                // ドミソミドと音を鳴らす
+                BeepSound();
+            }
+        }
+
+        /// <summary>
+        /// ネイティブのdllのメソッドをロードするクラス
+        /// </summary>
         private static class NativeMethods
         {
             [DllImport("Kernel32.dll")]

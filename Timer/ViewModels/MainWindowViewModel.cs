@@ -26,6 +26,10 @@ namespace Kchary.Timer.ViewModels
         /// ２桁表示であることに注意
         /// </remarks>
         private const string DefaultValue = "00";
+
+        /// <summary>
+        /// タイマーコントローラー
+        /// </summary>
         private TimerController TimerController { get; init; }
 
         private string minuteText;
@@ -53,12 +57,18 @@ namespace Kchary.Timer.ViewModels
             SecondText = DefaultValue;
         }
 
+        /// <summary>
+        /// 分
+        /// </summary>
         public string MinuteText
         {
             get => minuteText;
             private set => SetProperty(ref minuteText, value);
         }
 
+        /// <summary>
+        /// 秒
+        /// </summary>
         public string SecondText
         {
             get => secondText;
@@ -127,8 +137,8 @@ namespace Kchary.Timer.ViewModels
         /// <param name="timerValue">タイマー値</param>
         private void UpdateTimerValue(TimerValue timerValue)
         {
-            MinuteText = TimerController.GetStringValueFromTimerValue(timerValue.Minute);
-            SecondText = TimerController.GetStringValueFromTimerValue(timerValue.Second);
+            MinuteText = TimerController.GetTimerValue(timerValue.Minute);
+            SecondText = TimerController.GetTimerValue(timerValue.Second);
         }
     }
 }

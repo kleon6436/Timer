@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodel="clr-namespace:Kchary.Timer.ViewModels"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance viewmodel:MainWindowViewModel}"
+        d:DataContext="{d:DesignData viewmodel:MainWindowViewModel}"
         ResizeMode="CanMinimize"
         Title="Timer" Height="400" Width="320">
     <Window.Background>
