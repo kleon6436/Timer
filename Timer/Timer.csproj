@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Authors>kleon6436</Authors>
+    <Authors>kleon</Authors>
     <ApplicationIcon>OrTimerIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
