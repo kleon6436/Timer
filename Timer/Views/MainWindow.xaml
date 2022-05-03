@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodel="clr-namespace:Kchary.Timer.ViewModels"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignData viewmodel:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance viewmodel:MainWindowViewModel}"
         ResizeMode="CanMinimize"
-        Title="Timer" Height="400" Width="320">
+        Title="Timer" Height="400" Width="320" Closing="Window_Closing">
     <Window.Background>
         <SolidColorBrush Color="#F0F0F0" />
     </Window.Background>
@@ -24,12 +24,12 @@
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding MinuteText, Mode=OneWay}" FontSize="80" VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="0" Text="{Binding MinuteText.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 <TextBlock Grid.Column="1" Text="：" FontSize="80" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="{Binding SecondText, Mode=OneWay}" FontSize="80" VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding SecondText.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </Grid>
         </Border>
         <Grid Grid.Row="1">

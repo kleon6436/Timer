@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="ReactiveProperty" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

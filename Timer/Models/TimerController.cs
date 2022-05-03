@@ -4,15 +4,17 @@ using System.Windows;
 
 namespace Kchary.Timer.Models
 {
+    /// <summary>
+    /// タイマーの状態遷移
+    /// </summary>
+    public enum TimerStatus
+    {
+        Standby,
+        Processing,
+    }
+
     public sealed class TimerController
     {
-        /// <summary>
-        /// Timerイベント
-        /// </summary>
-        /// <param name="timerValue">Timer value</param>
-        public delegate void TimerEventHandler(TimerValue timerValue);
-        public event TimerEventHandler TimerEvent;
-
         /// <summary>
         /// 音程を表す周波数と長さ、タイマーの最大・最小値の固定値
         /// </summary>
@@ -20,8 +22,10 @@ namespace Kchary.Timer.Models
         private const int EFreq = 330; // ミ
         private const int GFreq = 392; // ソ
         private const int Duration = 500;
-        private const int MaxTimerValue = 59;
-        private const int MinTimerValue = 0;
+        private const int MaxMinuteValue = 99;
+        private const int MinMinuteValue = 0;
+        private const int MaxSecondValue = 59;
+        private const int MinSecondValue = 0;
 
         /// <summary>
         /// タイマー値
@@ -34,6 +38,17 @@ namespace Kchary.Timer.Models
         private System.Timers.Timer Timer { get; }
 
         /// <summary>
+        /// タイマーの状態
+        /// </summary>
+        public TimerStatus TimerStatus { get; set; }
+
+        /// <summary>
+        /// Timerイベント
+        /// </summary>
+        public delegate void TimerEventHandler(TimerValue timerValue);
+        public event TimerEventHandler TimerEvent;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public TimerController()
@@ -42,6 +57,7 @@ namespace Kchary.Timer.Models
             const int DefaultMinuteTimer = 0;
             const int DefaultSecondTimer = 0;
             TimerValue = new TimerValue(DefaultMinuteTimer, DefaultSecondTimer);
+            TimerStatus = TimerStatus.Standby;
 
             // タイマーの初期化とイベントハンドラー登録
             Timer = new System.Timers.Timer(1000)
@@ -54,65 +70,93 @@ namespace Kchary.Timer.Models
         /// <summary>
         /// 1分タイマー値にプラス
         /// </summary>
-        public string PlusMinute()
+        public TimerValue PlusMinute()
         {
             // タイマー値の最大値より小さい場合は＋１
-            if (TimerValue.Minute > MaxTimerValue)
+            if (TimerValue.Minute < MaxMinuteValue)
             {
                 TimerValue.Minute += 1;
             }
 
-            return GetTimerValue(TimerValue.Minute);
+            return TimerValue;
         }
 
         /// <summary>
         /// 1分タイマー値からマイナス
         /// </summary>
-        public string MinusMinute()
+        public TimerValue MinusMinute()
         {
             // タイマー値の最小値より大きい場合は-１
-            if (TimerValue.Minute > MinTimerValue)
+            if (TimerValue.Minute > MinMinuteValue)
             {
                 TimerValue.Minute -= 1;
             }
 
-            return GetTimerValue(TimerValue.Minute);
+            return TimerValue;
         }
 
         /// <summary>
-        /// 1秒タイマー値にプラス
+        /// タイマーの値に1秒を足す
         /// </summary>
-        public string PlusSecond()
+        public TimerValue PlusSecond()
         {
-            // タイマー値の最大値より小さい場合は＋１
-            if (TimerValue.Second < MaxTimerValue)
+            if (TimerValue.Second >= MaxSecondValue)
             {
-                TimerValue.Second += 1;
+                if (TimerValue.Minute >= MaxMinuteValue)
+                {
+                    // 分も最大値だったら更新せず、元の値を返す
+                    return TimerValue;
+                }
+                else
+                {
+                    // 分が最大値出ない場合は、秒 => 0、分に1を追加する
+                    TimerValue.Second = 0;
+                    TimerValue.Minute += 1;
+                    return TimerValue;
+                }
             }
-
-            return GetTimerValue(TimerValue.Second);
+            else
+            {
+                // 秒の値に余裕がある場合は、秒に1を足す
+                TimerValue.Second += 1;
+                return TimerValue;
+            }
         }
 
         /// <summary>
         /// 1秒タイマー値からマイナス
         /// </summary>
-        public string MinusSecond()
+        public TimerValue MinusSecond()
         {
-            // タイマー値の最小値より大きい場合は-１
-            if (TimerValue.Second > MinTimerValue)
+            if (TimerValue.Second <= MinSecondValue)
             {
-                TimerValue.Second -= 1;
+                if (TimerValue.Minute <= MinMinuteValue)
+                {
+                    // 分も最小値だったら更新せず、元の値を返す
+                    return TimerValue;
+                }
+                else
+                {
+                    // 分が最小値出ない場合は、秒 => 59、分 => -1を追加する
+                    TimerValue.Second = 59;
+                    TimerValue.Minute -= 1;
+                    return TimerValue;
+                }
             }
-
-            return GetTimerValue(TimerValue.Second);
+            else
+            {
+                // 秒の値に余裕がある場合は、秒から1を引く
+                TimerValue.Second -= 1;
+                return TimerValue;
+            }
         }
 
         /// <summary>
-        /// タイマー値を取得する
+        /// タイマー値を文字列に直した値を取得する
         /// </summary>
         /// <param name="timerValue">タイマー値</param>
         /// <returns>タイマー値を文字列に変換した結果</returns>
-        public static string GetTimerValue(int timerValue)
+        public static string ConvertTimerValueToStr(int timerValue)
         {
             // タイマーの値が10以下の場合は2桁目に0をつける
             return timerValue < 10 ? $"0{timerValue}" : timerValue.ToString();
@@ -124,12 +168,13 @@ namespace Kchary.Timer.Models
         public void StartTimer()
         {
             // 設定されたタイマーの値が分、秒どちらも0以下の場合は何もしない
-            if (TimerValue.Minute <= MinTimerValue && TimerValue.Second <= MinTimerValue)
+            if (TimerValue.Minute <= MinMinuteValue && TimerValue.Second <= MinSecondValue)
             {
                 return;
             }
 
             // タイマーを開始
+            TimerStatus = TimerStatus.Processing;
             Timer.Start();
         }
 
@@ -139,6 +184,7 @@ namespace Kchary.Timer.Models
         public void StopTimer()
         {
             Timer.Stop();
+            TimerStatus = TimerStatus.Standby;
         }
 
         /// <summary>
@@ -153,8 +199,8 @@ namespace Kchary.Timer.Models
             }
 
             // タイマーを最小値に戻す
-            TimerValue.Minute = MinTimerValue;
-            TimerValue.Second = MinTimerValue;
+            TimerValue.Minute = MinMinuteValue;
+            TimerValue.Second = MinSecondValue;
 
             TimerEvent?.Invoke(TimerValue);
         }
@@ -176,11 +222,17 @@ namespace Kchary.Timer.Models
         /// </summary>
         private void OnElapsedTimer(object sender, ElapsedEventArgs e)
         {
-            if (TimerValue.Minute > MinTimerValue && TimerValue.Second == MinTimerValue)
+            if (TimerStatus != TimerStatus.Processing)
+            {
+                // 処理中でないときは、以降の処理はスキップ
+                return;
+            }
+
+            if (TimerValue.Minute > MinMinuteValue && TimerValue.Second == MinSecondValue)
             {
                 // 1分減らして59秒にする
                 TimerValue.Minute -= 1;
-                TimerValue.Second = MaxTimerValue;
+                TimerValue.Second = MaxSecondValue;
             }
             else
             {
@@ -188,10 +240,18 @@ namespace Kchary.Timer.Models
                 TimerValue.Second -= 1;
             }
 
-            Application.Current.Dispatcher.Invoke(() => { TimerEvent?.Invoke(TimerValue); });
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                if (TimerStatus != TimerStatus.Processing)
+                {
+                    // 処理中でないときは、以降の処理はスキップ
+                    return;
+                }
+                TimerEvent?.Invoke(TimerValue);
+            });
 
             // どちらも0になった場合はタイマー終了
-            if (TimerValue.Minute == MinTimerValue && TimerValue.Second == MinTimerValue)
+            if (TimerValue.Minute == MinMinuteValue && TimerValue.Second == MinSecondValue)
             {
                 // タイマーを終了
                 Timer.Stop();

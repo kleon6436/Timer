@@ -1,39 +1,47 @@
-﻿using System.Windows.Input;
+﻿using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System.Reactive.Disposables;
 using Kchary.Timer.Models;
-using Prism.Commands;
-using Prism.Mvvm;
 
 namespace Kchary.Timer.ViewModels
 {
     public sealed class MainWindowViewModel : BindableBase
     {
-        #region コマンド一覧
-
-        public ICommand MinutePlusCommand { get; }
-        public ICommand MinuteMinusCommand { get; }
-        public ICommand SecondPlusCommand { get; }
-        public ICommand SecondMinusCommand { get; }
-        public ICommand StartButtonCommand { get; }
-        public ICommand StopButtonCommand { get; }
-        public ICommand ResetButtonCommand { get; }
-
-        #endregion
+        private readonly CompositeDisposable disposables = new();
 
         /// <summary>
         /// タイマーに表示する数字のデフォルト値
         /// </summary>
         /// <remarks>
-        /// ２桁表示であることに注意
+        /// 2桁表示であることに注意
         /// </remarks>
         private const string DefaultValue = "00";
+
+        #region Command
+        public ReactiveCommand MinutePlusCommand { get; }
+        public ReactiveCommand MinuteMinusCommand { get; }
+        public ReactiveCommand SecondPlusCommand { get; }
+        public ReactiveCommand SecondMinusCommand { get; }
+        public ReactiveCommand StartButtonCommand { get; }
+        public ReactiveCommand StopButtonCommand { get; }
+        public ReactiveCommand ResetButtonCommand { get; }
+        #endregion
+
+        /// <summary>
+        /// 分テキスト
+        /// </summary>
+        public ReactivePropertySlim<string> MinuteText { get; } = new();
+
+        /// <summary>
+        /// 秒テキスト
+        /// </summary>
+        public ReactivePropertySlim<string> SecondText { get; } = new();
 
         /// <summary>
         /// タイマーコントローラー
         /// </summary>
-        private TimerController TimerController { get; init; }
-
-        private string minuteText;
-        private string secondText;
+        public TimerController TimerController { get; init; }
 
         /// <summary>
         /// コンストラクタ
@@ -41,38 +49,39 @@ namespace Kchary.Timer.ViewModels
         public MainWindowViewModel()
         {
             // コマンドの設定
-            MinutePlusCommand = new DelegateCommand(MinutePlusCommandClicked);
-            MinuteMinusCommand = new DelegateCommand(MinuteMinusCommandClicked);
-            SecondPlusCommand = new DelegateCommand(SecondPlusCommandClicked);
-            SecondMinusCommand = new DelegateCommand(SecondMinusCommandClicked);
-            StartButtonCommand = new DelegateCommand(StartButtonCommandClicked);
-            StopButtonCommand = new DelegateCommand(StopButtonCommandClicked);
-            ResetButtonCommand = new DelegateCommand(ResetButtonCommandClicked);
+            MinutePlusCommand = new ReactiveCommand().WithSubscribe(MinutePlusCommandClicked).AddTo(disposables);
+            MinuteMinusCommand = new ReactiveCommand().WithSubscribe(MinuteMinusCommandClicked).AddTo(disposables);
+            SecondPlusCommand = new ReactiveCommand().WithSubscribe(SecondPlusCommandClicked).AddTo(disposables);
+            SecondMinusCommand = new ReactiveCommand().WithSubscribe(SecondMinusCommandClicked).AddTo(disposables);
+            StartButtonCommand = new ReactiveCommand().WithSubscribe(StartButtonCommandClicked).AddTo(disposables);
+            StopButtonCommand = new ReactiveCommand().WithSubscribe(StopButtonCommandClicked).AddTo(disposables);
+            ResetButtonCommand = new ReactiveCommand().WithSubscribe(ResetButtonCommandClicked).AddTo(disposables);
 
+            // コントローラーの設定
             TimerController = new TimerController();
             TimerController.TimerEvent += UpdateTimerValue;
 
-            // プロパティの初期値をセット
-            MinuteText = DefaultValue;
-            SecondText = DefaultValue;
+            // 初期値設定
+            MinuteText.Value = DefaultValue;
+            SecondText.Value = DefaultValue;
         }
 
         /// <summary>
-        /// 分
+        /// Dispose
         /// </summary>
-        public string MinuteText
-        {
-            get => minuteText;
-            private set => SetProperty(ref minuteText, value);
-        }
+        public void Dispose() => disposables.Dispose();
 
         /// <summary>
-        /// 秒
+        /// タイマーの状態を確認し、停止処理を行う
         /// </summary>
-        public string SecondText
+        public void CheckAndStopTimer()
         {
-            get => secondText;
-            private set => SetProperty(ref secondText, value);
+            if (TimerController.TimerStatus != TimerStatus.Processing)
+            {
+                return;
+            }
+
+            TimerController.StopTimer();
         }
 
         /// <summary>
@@ -80,7 +89,8 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void MinutePlusCommandClicked()
         {
-            MinuteText = TimerController.PlusMinute();
+            var timerValue = TimerController.PlusMinute();
+            UpdateTimerValue(timerValue);
         }
 
         /// <summary>
@@ -88,7 +98,8 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void MinuteMinusCommandClicked()
         {
-            MinuteText = TimerController.MinusMinute();
+            var timerValue = TimerController.MinusMinute();
+            UpdateTimerValue(timerValue);
         }
 
         /// <summary>
@@ -96,7 +107,8 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void SecondPlusCommandClicked()
         {
-            SecondText = TimerController.PlusSecond();
+            var timerValue = TimerController.PlusSecond();
+            UpdateTimerValue(timerValue);
         }
 
         /// <summary>
@@ -104,7 +116,8 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void SecondMinusCommandClicked()
         {
-            SecondText = TimerController.MinusSecond();
+            var timerValue = TimerController.MinusSecond();
+            UpdateTimerValue(timerValue);
         }
 
         /// <summary>
@@ -120,7 +133,7 @@ namespace Kchary.Timer.ViewModels
         /// </summary>
         private void StopButtonCommandClicked()
         {
-            TimerController.StopTimer();
+            CheckAndStopTimer();
         }
 
         /// <summary>
@@ -137,8 +150,8 @@ namespace Kchary.Timer.ViewModels
         /// <param name="timerValue">タイマー値</param>
         private void UpdateTimerValue(TimerValue timerValue)
         {
-            MinuteText = TimerController.GetTimerValue(timerValue.Minute);
-            SecondText = TimerController.GetTimerValue(timerValue.Second);
+            MinuteText.Value = TimerController.ConvertTimerValueToStr(timerValue.Minute);
+            SecondText.Value = TimerController.ConvertTimerValueToStr(timerValue.Second);
         }
     }
 }
