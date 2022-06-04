@@ -3,10 +3,11 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Disposables;
 using Kchary.Timer.Models;
+using System;
 
 namespace Kchary.Timer.ViewModels
 {
-    public sealed class MainWindowViewModel : BindableBase
+    public sealed class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly CompositeDisposable disposables = new();
 
