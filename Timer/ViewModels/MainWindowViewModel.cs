@@ -1,9 +1,9 @@
-﻿using Prism.Mvvm;
+﻿using Kchary.Timer.Models;
+using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using System.Reactive.Disposables;
-using Kchary.Timer.Models;
 using System;
+using System.Reactive.Disposables;
 
 namespace Kchary.Timer.ViewModels
 {

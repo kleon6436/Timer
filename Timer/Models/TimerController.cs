@@ -75,7 +75,7 @@ namespace Kchary.Timer.Models
             // タイマー値の最大値より小さい場合は＋１
             if (TimerValue.Minute < MaxMinuteValue)
             {
-                TimerValue.Minute += 1;
+                TimerValue.Minute++;
             }
 
             return TimerValue;
@@ -89,7 +89,7 @@ namespace Kchary.Timer.Models
             // タイマー値の最小値より大きい場合は-１
             if (TimerValue.Minute > MinMinuteValue)
             {
-                TimerValue.Minute -= 1;
+                TimerValue.Minute--;
             }
 
             return TimerValue;
@@ -111,14 +111,14 @@ namespace Kchary.Timer.Models
                 {
                     // 分が最大値出ない場合は、秒 => 0、分に1を追加する
                     TimerValue.Second = 0;
-                    TimerValue.Minute += 1;
+                    TimerValue.Minute++;
                     return TimerValue;
                 }
             }
             else
             {
                 // 秒の値に余裕がある場合は、秒に1を足す
-                TimerValue.Second += 1;
+                TimerValue.Second++;
                 return TimerValue;
             }
         }
@@ -139,14 +139,14 @@ namespace Kchary.Timer.Models
                 {
                     // 分が最小値出ない場合は、秒 => 59、分 => -1を追加する
                     TimerValue.Second = 59;
-                    TimerValue.Minute -= 1;
+                    TimerValue.Minute--;
                     return TimerValue;
                 }
             }
             else
             {
                 // 秒の値に余裕がある場合は、秒から1を引く
-                TimerValue.Second -= 1;
+                TimerValue.Second--;
                 return TimerValue;
             }
         }
@@ -231,16 +231,16 @@ namespace Kchary.Timer.Models
             if (TimerValue.Minute > MinMinuteValue && TimerValue.Second == MinSecondValue)
             {
                 // 1分減らして59秒にする
-                TimerValue.Minute -= 1;
+                TimerValue.Minute--;
                 TimerValue.Second = MaxSecondValue;
             }
             else
             {
                 // 1秒減らす
-                TimerValue.Second -= 1;
+                TimerValue.Second--;
             }
 
-            Application.Current.Dispatcher.Invoke(() => 
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 if (TimerStatus != TimerStatus.Processing)
                 {
