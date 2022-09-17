@@ -1,7 +1,10 @@
-{
-  "profiles": {
-    "Timer": {
-      "commandName": "Project"
+﻿{
+    "profiles": {
+      "Timer (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "Timer (Unpackaged)": {
+        "commandName": "Project"
+      }
     }
-  }
 }
