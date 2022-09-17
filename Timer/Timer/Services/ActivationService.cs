@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 
 using Timer.Activation;
 using Timer.Contracts.Services;
-using Timer.Views;
 
 namespace Timer.Services;
 
